@@ -13,4 +13,4 @@ Réparation du projet github - https://github.com/NeoSpheres/front-end-assessmen
 
 # Petit tuto pour mettre en avant l'utilisation de RTK Query avec une API
 
-https://github.com/r-baudot/PeopleSpheresToolkit)
+https://github.com/r-baudot/PeopleSpheresToolkit
