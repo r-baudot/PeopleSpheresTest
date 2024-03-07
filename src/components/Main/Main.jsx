@@ -1,9 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
 
-export const Main = ({children}) => (<div>{children}</div>);
+import { Outlet } from "react-router-dom";
 
-Main.propTypes = {
-    children: PropTypes.node.isRequired,
-};
+const Main = () => (
+  <div className="content">
+    <div className="container">
+      <div className="main">
+        <Outlet />
+      </div>
+    </div>
+  </div>
+);
 
+export default Main;

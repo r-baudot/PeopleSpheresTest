@@ -1,38 +1,34 @@
-import React from 'react';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
-import {getProductById} from '../../../reducers/products';
-import {ProductForm} from './ProductForm';
-import {Link} from 'react-router-dom';
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-const UpdateFormContainer = ({categories, dispatch, product}) => {
-    if (!product) {
-        return null;
-    }
+import { ProductForm } from "./ProductForm";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { updateProductForm } from "../../../store/actions/products";
 
-    return (
-        <>
-            <Link to='/'>Home</Link>
-            <ProductForm
-                onSave={(data) => {
-                    return
-                }}
-                product={product}
-                categories={categories}
-            />
-        </>
-    );
+const UpdateFormContainer = () => {
+  const productsStore = useSelector((state) => state.products);
+  const { productId } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const product = productsStore.filter((product) => {
+    return +product.id == +productId;
+  });
+
+  if (!product) {
+    return null;
+  }
+
+  const saveProduct = (updatedProduct) => {
+    dispatch(updateProductForm(updatedProduct, productId, navigate));
+  };
+
+  return (
+    <>
+      <Link to="/">Home</Link>
+      <ProductForm onSave={saveProduct} product={product[0]} />
+    </>
+  );
 };
 
-UpdateFormContainer.propTypes = {
-    product: PropTypes.object,
-    categories: PropTypes.array,
-    history: PropTypes.object,
-};
-
-const mapStateToProps = (state, {productId}) => ({
-    product: getProductById(state, productId),
-    categories: state.categories,
-});
-
-export default connect(mapStateToProps)(UpdateFormContainer);
+export default UpdateFormContainer;

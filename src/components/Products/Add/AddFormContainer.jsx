@@ -1,27 +1,23 @@
-import React from 'react';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
-import {ProductForm} from '../Update/ProductForm';
+import React from "react";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { ProductForm } from "../Update/ProductForm";
+import { createProductForm } from "../../../store/actions/products";
 
-const AddFormContainer = ({categories, dispatch}) => (
+const AddFormContainer = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const saveProduct = (data) => {
+    dispatch(createProductForm(data, navigate));
+  };
+
+  return (
     <>
-        <Link to='/'>Home</Link>
-        <ProductForm
-            onSave={(data) => {
-                return;
-            }}
-            categories={categories}
-        />
+      <Link to="/">Home</Link>
+      <ProductForm onSave={saveProduct} />
     </>
-);
-
-AddFormContainer.propTypes = {
-    categories: PropTypes.array,
+  );
 };
 
-const mapStateToProps = (state) => ({
-    categories: state.categories,
-});
-
-export default connect(mapStateToProps)(AddFormContainer);
+export default AddFormContainer;

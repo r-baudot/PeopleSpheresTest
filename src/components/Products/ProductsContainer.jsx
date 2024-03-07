@@ -1,38 +1,29 @@
-import React, {Fragment} from 'react';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
-import Header from '../Header/Header';
-import ProductsList from './ProductsList';
-import {deleteProduct} from '../../actions/products';
-import {getCategoriesById} from '../../reducers/categories';
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import Header from "../Header/Header";
+import ProductsList from "./ProductsList";
+import { deleteProduct } from "../../store/actions/products";
+import { getCategoriesById } from "../../store/reducers/categories";
 
-const ProductsContainer = ({dispatch, products}) => (
-    <Fragment>
-        <Header name="Products"/>
-        <ProductsList products={products} onDelete={(id) => dispatch(deleteProduct(id))}/>
-    </Fragment>
-);
-
-ProductsContainer.propTypes = {
-    products: PropTypes.array.isRequired,
-    dispatch: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => {
+const ProductsContainer = () => {
+  const dispatch = useDispatch();
+  const productsWithCategories = useSelector((state) => {
     const categoriesById = getCategoriesById(state);
+    return state.products.map((product) => ({
+      ...product,
+      categories: product.categories.map((id) => categoriesById[id]),
+    }));
+  });
 
-    const products = state.products.map(product => {
-        const categories = product.categories.map(id => categoriesById[id])
-
-        return {
-            ...product,
-            categories
-        };
-    });
-
-    return {
-        products,
-    }
+  return (
+    <>
+      <Header name="Products" />
+      <ProductsList
+        products={productsWithCategories}
+        onDelete={(id) => dispatch(deleteProduct(id))}
+      />
+    </>
+  );
 };
 
-export default connect(mapStateToProps)(ProductsContainer);
+export default ProductsContainer;

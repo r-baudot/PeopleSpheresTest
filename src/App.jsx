@@ -1,21 +1,39 @@
-import React from 'react'
-import {Route, Switch} from 'react-router-dom'
-import {Main} from './components/Main/Main'
-import ProductsContainer from './components/Products/ProductsContainer'
-import NotFound from './components/NotFound/NotFound'
-import UpdateFormContainer from './components/Products/Update/UpdateFormContainer';
-import AddFormContainer from './components/Products/Add/AddFormContainer';
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Main from "./components/Main/Main";
+import ProductsContainer from "./components/Products/ProductsContainer";
+import NotFound from "./components/NotFound/NotFound";
+import UpdateFormContainer from "./components/Products/Update/UpdateFormContainer";
+import AddFormContainer from "./components/Products/Add/AddFormContainer";
 
-export const App = () => (
-    <Main>
-        <Switch>
-            <Route exact path="/" component={ProductsContainer}/>,
-            <Route
-                path="/edit/:productId"
-                render={({match}) => (<UpdateFormContainer productId={parseInt(match.params.productId)}/>)}
-            />,
-            <Route path="/add" component={AddFormContainer}/>,
-            <Route path="*" component={NotFound}/>,
-        </Switch>
-    </Main>
-);
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Main />,
+    errorElement: <NotFound />,
+    children: [
+      {
+        index: true,
+        element: <ProductsContainer />,
+      },
+      {
+        path: "edit/:productId",
+        element: <UpdateFormContainer />,
+      },
+      {
+        path: "add",
+        element: <AddFormContainer />,
+      },
+      {
+        path: "*",
+        element: <NotFound />,
+      },
+    ],
+  },
+]);
+
+export const App = () => {
+  return <RouterProvider router={router} />;
+};
+
+export default App;

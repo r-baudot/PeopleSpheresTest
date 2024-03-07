@@ -1,40 +1,19 @@
 import React, { StrictMode } from "react";
-import ReactDOM from "react-dom";
-import { createStore, applyMiddleware } from "redux";
+
+import { createRoot } from "react-dom/client"; // Utilisation de createRoot au lieu de ReactDOM
 import { Provider } from "react-redux";
-import thunk from "redux-thunk";
-import { composeWithDevTools } from "redux-devtools-extension";
-import reducers from "./reducers";
-import "./index.css";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { storeInit, populateStore } from "./store/storeInit";
+
 import { App } from "./App";
-import { fetchCategories } from "./actions/categories";
-import { fetchProducts } from "./actions/products";
-import { createHashHistory } from "history";
-import { Router } from "react-router-dom";
-import { categoryApi } from "./gateways/CategoryApi";
+import "./index.css"; // import "bootstrap/dist/css/bootstrap.min.css";
 
-const history = createHashHistory();
-const deps = { history, categoryApi };
+populateStore();
 
-const store = createStore(
-  reducers,
-  composeWithDevTools(applyMiddleware(thunk.withExtraArgument(deps)))
-);
-store.dispatch(fetchCategories());
-store.dispatch(fetchProducts());
-
-ReactDOM.render(
-  <div className="content">
-    <div className="container">
-      <StrictMode>
-        <Provider store={store}>
-          <Router history={history}>
-            <App />
-          </Router>
-        </Provider>
-      </StrictMode>
-    </div>
-  </div>,
-  document.getElementById("root")
+const root = createRoot(document.getElementById("root"));
+root.render(
+  <StrictMode>
+    <Provider store={storeInit}>
+      <App />
+    </Provider>
+  </StrictMode>
 );
